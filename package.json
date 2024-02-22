@@ -21,7 +21,8 @@
     ],
     "scripts": {
         "build": "tsup",
-        "lint": "tsc"
+        "lint": "tsc",
+        "publish": "pnpm run build && changeset publish"
     },
     "devDependencies": {
         "@changesets/cli": "^2.27.1",
