@@ -1,0 +1,47 @@
+{
+    "name": "htjs",
+    "version": "0.0.1",
+    "description": "Pure JS + no template string JSX alternative",
+    "main": "dist/index.js",
+    "module": "dist/index.mjs",
+    "types": "dist/index.d.ts",
+    "author": "ben armstrong",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/benarmstrongg/htjs.git"
+    },
+    "license": "MIT",
+    "keywords": [
+        "htjs",
+        "jsx",
+        "preact"
+    ],
+    "files": [
+        "dist/**"
+    ],
+    "scripts": {
+        "build": "tsup",
+        "lint": "tsc"
+    },
+    "devDependencies": {
+        "@changesets/cli": "^2.27.1",
+        "@types/node": "^20.11.19",
+        "@types/react": "^18.2.57",
+        "tsup": "^8.0.2",
+        "typescript": "^5.3.3"
+    },
+    "tsup": {
+        "entry": [
+            "src/index.ts",
+            "src/elems.ts"
+        ],
+        "format": [
+            "cjs",
+            "esm"
+        ],
+        "dts": true,
+        "minify": true,
+        "splitting": false,
+        "clean": true
+    }
+}
