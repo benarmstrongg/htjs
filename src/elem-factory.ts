@@ -19,7 +19,6 @@ type IntrinsicElementFactory = {
     button: ReturnType<typeof e<'button', any>>;
     canvas: ReturnType<typeof e<'canvas', any>>;
     caption: ReturnType<typeof e<'caption', any>>;
-    center: ReturnType<typeof e<'center', any>>;
     cite: ReturnType<typeof e<'cite', any>>;
     code: ReturnType<typeof e<'code', any>>;
     col: ReturnType<typeof e<'col', any>>;
@@ -71,7 +70,6 @@ type IntrinsicElementFactory = {
     meta: ReturnType<typeof e<'meta', any>>;
     meter: ReturnType<typeof e<'meter', any>>;
     nav: ReturnType<typeof e<'nav', any>>;
-    noindex: ReturnType<typeof e<'noindex', any>>;
     noscript: ReturnType<typeof e<'noscript', any>>;
     object: ReturnType<typeof e<'object', any>>;
     ol: ReturnType<typeof e<'ol', any>>;
@@ -103,7 +101,6 @@ type IntrinsicElementFactory = {
     summary: ReturnType<typeof e<'summary', any>>;
     sup: ReturnType<typeof e<'sup', any>>;
     table: ReturnType<typeof e<'table', any>>;
-    template: ReturnType<typeof e<'template', any>>;
     tbody: ReturnType<typeof e<'tbody', any>>;
     td: ReturnType<typeof e<'td', any>>;
     textarea: ReturnType<typeof e<'textarea', any>>;
@@ -119,7 +116,6 @@ type IntrinsicElementFactory = {
     var: ReturnType<typeof e<'var', any>>;
     video: ReturnType<typeof e<'video', any>>;
     wbr: ReturnType<typeof e<'wbr', any>>;
-    webview: ReturnType<typeof e<'webview', any>>;
     // SVG
     svg: ReturnType<typeof e<'svg', any>>;
     animate: ReturnType<typeof e<'animate', any>>;
