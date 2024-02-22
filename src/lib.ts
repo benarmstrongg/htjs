@@ -1,8 +1,10 @@
+import { JSXInternal } from './preact-types';
+
 type HtjsElement = { _htjs: true };
 
-type IntrinsicElementTag = keyof JSX.IntrinsicElements;
+type IntrinsicElementTag = keyof JSXInternal.IntrinsicElements;
 type IntrinsicElementProps<TTag extends IntrinsicElementTag> =
-    JSX.IntrinsicElements[TTag];
+    JSXInternal.IntrinsicElements[TTag];
 
 type ElementTag = IntrinsicElementTag | HtjsElement;
 type ElementPropsWithChildren<
