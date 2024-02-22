@@ -19,6 +19,9 @@
     "files": [
         "dist/**"
     ],
+    "publishConfig": {
+        "access": "public"
+    },
     "scripts": {
         "build": "tsup",
         "lint": "tsc",
