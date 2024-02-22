@@ -86,10 +86,10 @@ export function elementFactoryFactory<TTag extends ElementTag, TProps>(
 ) {
     function elementFactory(
         props: ElementProps<typeof tag, TProps>
-    ): ReturnType<typeof withProps>;
+    ): ReturnType<typeof withProps<typeof tag, any>>;
     function elementFactory(
         ...children: ChildNode[]
-    ): ReturnType<typeof withoutProps>;
+    ): ReturnType<typeof withoutProps<typeof tag>>;
     function elementFactory(
         ...propsOrChildren: PropsOrChildren<typeof tag, TProps>
     ): HtjsElement | ElementWithPropsFactory {
@@ -104,14 +104,14 @@ export function componentFactoryFactory<TProps>(
     type TPropsNoChildren = Omit<TProps, 'children'>;
     function componentFactory(
         props: ElementProps<HtjsElement, TProps>
-    ): ReturnType<typeof withProps>;
+    ): ReturnType<typeof withProps<HtjsElement, TProps>>;
     function componentFactory(
         ...children: Partial<TPropsNoChildren> extends TPropsNoChildren
             ? ChildNode[]
             : [ElementProps<HtjsElement, TProps>]
     ): Partial<TPropsNoChildren> extends TPropsNoChildren
-        ? ReturnType<typeof withoutProps>
-        : ReturnType<typeof withProps>;
+        ? ReturnType<typeof withoutProps<HtjsElement>>
+        : ReturnType<typeof withProps<HtjsElement, TProps>>;
     function componentFactory(
         ...propsOrChildren: Partial<TPropsNoChildren> extends TPropsNoChildren
             ? PropsOrChildren<HtjsElement, TProps>
