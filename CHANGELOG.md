@@ -1,5 +1,11 @@
 # @barndev/htjs
 
+## 0.0.4
+
+### Patch Changes
+
+- 8c0a029: Updated to ship pnpm JSX types
+
 ## 0.0.3
 
 ### Patch Changes
