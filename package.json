@@ -1,6 +1,6 @@
 {
     "name": "@barndev/htjs",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "Lightweight, pure-JS alternative to JSX",
     "main": "dist/index.js",
     "module": "dist/index.mjs",
