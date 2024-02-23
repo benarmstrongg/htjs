@@ -2,24 +2,32 @@
     "name": "@barndev/htjs",
     "version": "0.0.5",
     "description": "Lightweight, pure-JS alternative to JSX",
-    "main": "dist/index.js",
-    "module": "dist/index.mjs",
-    "types": "dist/index.d.ts",
-    "exports": {
-        ".": "./dist/index.js",
-        "./elems": "./dist/elems.js"
-    },
-    "author": "ben armstrong",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/benarmstrongg/htjs.git"
-    },
     "license": "MIT",
     "keywords": [
         "htjs",
         "jsx",
         "preact"
     ],
+    "main": "dist/index.js",
+    "module": "dist/index.mjs",
+    "types": "dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/index.js",
+            "require": "./dist/index.mjs",
+            "types": "./dist/index.d.ts"
+        },
+        "./elems": {
+            "import": "./dist/elems.js",
+            "require": "./dist/elems.mjs",
+            "types": "./dist/elems.d.ts"
+        }
+    },
+    "author": "ben armstrong",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/benarmstrongg/htjs.git"
+    },
     "files": [
         "dist/**"
     ],
