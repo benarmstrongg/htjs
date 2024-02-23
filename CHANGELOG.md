@@ -1,5 +1,11 @@
 # @barndev/htjs
 
+## 0.0.8
+
+### Patch Changes
+
+- db3f229: Add prepublish step to copy elems entry point to root.
+
 ## 0.0.7
 
 ### Patch Changes
