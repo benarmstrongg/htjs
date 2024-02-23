@@ -1,5 +1,11 @@
 # @barndev/htjs
 
+## 0.0.5
+
+### Patch Changes
+
+- 11b4c45: Fix issue with elems exports initializing before bind call. Elems is now a mutually exclusive entry point; i.e. index bind() won't work for elems div() export, elems bind() must be used.
+
 ## 0.0.4
 
 ### Patch Changes
