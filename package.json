@@ -8,21 +8,9 @@
         "jsx",
         "preact"
     ],
-    "main": "dist/index.js",
+    "main": "dist/",
     "module": "dist/index.mjs",
     "types": "dist/index.d.ts",
-    "exports": {
-        ".": {
-            "import": "./dist/index.js",
-            "require": "./dist/index.mjs",
-            "types": "./dist/index.d.ts"
-        },
-        "./elems": {
-            "import": "./dist/elems.js",
-            "require": "./dist/elems.mjs",
-            "types": "./dist/elems.d.ts"
-        }
-    },
     "author": "ben armstrong",
     "repository": {
         "type": "git",
