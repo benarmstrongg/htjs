@@ -31,21 +31,8 @@
     "devDependencies": {
         "@changesets/cli": "^2.27.1",
         "@types/node": "^20.11.19",
+        "ts-node": "^10.9.2",
         "tsup": "^8.0.2",
         "typescript": "^5.3.3"
-    },
-    "tsup": {
-        "entry": [
-            "src/index.ts",
-            "src/elems.ts"
-        ],
-        "format": [
-            "cjs",
-            "esm"
-        ],
-        "dts": true,
-        "minify": true,
-        "splitting": false,
-        "clean": true
     }
 }

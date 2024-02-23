@@ -1,0 +1,11 @@
+{
+    "$schema": "./node_modules/tsup/schema.json",
+    "entry": ["src/index.ts", "src/elems.ts"],
+    "format": ["cjs", "esm"],
+    "target": "es2020",
+    "minify": true,
+    "dts": true,
+    "splitting": false,
+    "clean": true,
+    "shims": true
+}
