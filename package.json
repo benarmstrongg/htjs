@@ -1,7 +1,7 @@
 {
     "name": "@barndev/htjs",
     "version": "0.0.5",
-    "description": "Lightweight, pure-JS alternative to JSX",
+    "description": "Lightweight, no build, pure-JS alternative to JSX",
     "license": "MIT",
     "keywords": [
         "htjs",
