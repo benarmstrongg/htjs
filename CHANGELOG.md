@@ -1,5 +1,11 @@
 # @barndev/htjs
 
+## 0.0.6
+
+### Patch Changes
+
+- a64f0dd: Updated package.json "exports", going to consider moving build artifacts to root if this doesn't work. + cleanup changes xd
+
 ## 0.0.5
 
 ### Patch Changes
