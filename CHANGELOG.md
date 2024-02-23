@@ -1,5 +1,11 @@
 # @barndev/htjs
 
+## 0.0.7
+
+### Patch Changes
+
+- 9b5e5b6: Update `main` in package.json hoping for /elems export. If not reverting to root dir dist.
+
 ## 0.0.6
 
 ### Patch Changes
