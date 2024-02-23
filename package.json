@@ -27,7 +27,7 @@
         "lint": "tsc",
         "changeset": "changeset",
         "prepublish": "pnpm run build && cp ./dist/elems* ./",
-        "publish": "changeset publish"
+        "publish": "pnpm run prepublish && changeset publish"
     },
     "devDependencies": {
         "@changesets/cli": "^2.27.1",
