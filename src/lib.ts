@@ -41,9 +41,9 @@ let createElement: (<TTag extends ElementTag, TProps>(
 
 function isChildren(args: any): args is ChildNode[] {
     return (
-        args.length > 1 ||
+        args.length !== 1 ||
         typeof args[0] === 'string' ||
-        (args[0] as HtjsElement)._htjs === true
+        (args[0] as HtjsElement)?._htjs === true
     );
 }
 
