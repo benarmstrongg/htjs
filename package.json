@@ -8,7 +8,7 @@
         "jsx",
         "preact"
     ],
-    "main": "dist/",
+    "main": "dist/index.js",
     "module": "dist/index.mjs",
     "types": "dist/index.d.ts",
     "author": "ben armstrong",
@@ -26,7 +26,8 @@
         "build": "tsup",
         "lint": "tsc",
         "changeset": "changeset",
-        "publish": "pnpm run build && changeset publish"
+        "prepublish": "pnpm run build && cp ./dist/elems* ./",
+        "publish": "changeset publish"
     },
     "devDependencies": {
         "@changesets/cli": "^2.27.1",
