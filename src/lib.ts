@@ -78,7 +78,7 @@ function withoutProps<TTag extends ElementTag>(
     ...children: ChildNode[]
 ): HtjsElement {
     // @ts-expect-error
-    return createElement(tag, null, ...children);
+    return createElement(tag, null, children);
 }
 
 export function elementFactoryFactory<TTag extends ElementTag, TProps>(
