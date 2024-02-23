@@ -11,13 +11,18 @@
     "main": "dist/index.js",
     "module": "dist/index.mjs",
     "types": "dist/index.d.ts",
+    "exports": {
+        ".": "./dist/index.js",
+        "./elems": "./dist/elems.js"
+    },
     "author": "ben armstrong",
     "repository": {
         "type": "git",
         "url": "https://github.com/benarmstrongg/htjs.git"
     },
     "files": [
-        "dist/**"
+        "./dist/**",
+        "./elems*"
     ],
     "publishConfig": {
         "access": "public"
