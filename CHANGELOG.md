@@ -1,5 +1,11 @@
 # @barndev/htjs
 
+## 0.0.9
+
+### Patch Changes
+
+- 0abf0de: Update publish script to run prepublish script.
+
 ## 0.0.8
 
 ### Patch Changes
