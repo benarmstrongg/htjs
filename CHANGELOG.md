@@ -10,7 +10,7 @@
 
 ### Patch Changes
 
-- 8c0a029: Updated to ship pnpm JSX types
+- 8c0a029: Updated to ship preact JSX types
 
 ## 0.0.3
 
