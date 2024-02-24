@@ -43,45 +43,45 @@ let createElement: (<TTag extends ElementTag, TProps>(
 
 function isChildren(args: any): args is ChildNode[] {
     return (
-        args.length !== 1 ||
-        typeof args[0] === 'string' ||
-        (args[0] as HtjsNode)?._htjs === true
+        args.length != 1 ||
+        typeof args[0] == 'string' ||
+        (args[0] as HtjsNode)?._htjs == true
     );
 }
 
-export function withOrWithoutProps<TTag extends ElementTag, TProps>(
+function withOrWithoutProps<TTag extends ElementTag, TProps>(
     tag: TTag,
-    props: ElementProps<typeof tag, TProps>
+    props: [ElementProps<typeof tag, TProps>]
 ): ReturnType<typeof withProps>;
-export function withOrWithoutProps<TTag extends ElementTag, TProps>(
+function withOrWithoutProps<TTag extends ElementTag, TProps>(
     tag: TTag,
-    ...children: ChildNode[]
+    children: ChildNode[]
 ): ReturnType<typeof withoutProps>;
-export function withOrWithoutProps<TTag extends ElementTag, TProps>(
+function withOrWithoutProps<TTag extends ElementTag, TProps>(
     tag: TTag,
-    ...propsOrChildren: PropsOrChildren<typeof tag, TProps>
+    propsOrChildren: PropsOrChildren<typeof tag, TProps>
 ): HtjsNode | ElementWithPropsFactory {
     if (isChildren(propsOrChildren)) {
-        return withoutProps(tag, ...propsOrChildren);
+        return withoutProps(tag, propsOrChildren);
     }
     const props = propsOrChildren[0] as ElementProps<typeof tag, TProps>;
     return withProps(tag, props);
 }
 
-function withProps<TTag extends ElementTag, TProps>(
-    tag: TTag,
-    props: ElementProps<typeof tag, TProps>
-): ElementWithPropsFactory {
-    return (...children: ChildNode[]) => createElement(tag, props, children);
-}
+const withProps =
+    <TTag extends ElementTag, TProps>(
+        tag: TTag,
+        props: ElementProps<typeof tag, TProps>
+    ): ElementWithPropsFactory =>
+    (...children: ChildNode[]) =>
+        createElement(tag, props, children);
 
-function withoutProps<TTag extends ElementTag>(
+const withoutProps = <TTag extends ElementTag>(
     tag: TTag,
-    ...children: ChildNode[]
-): HtjsNode {
+    children: ChildNode[]
+): HtjsNode =>
     // @ts-expect-error
-    return createElement(tag, null, children);
-}
+    createElement(tag, null, children);
 
 export function elementFactoryFactory<TTag extends ElementTag, TProps>(
     tag: TTag
@@ -95,7 +95,7 @@ export function elementFactoryFactory<TTag extends ElementTag, TProps>(
     function elementFactory(
         ...propsOrChildren: PropsOrChildren<typeof tag, TProps>
     ): HtjsNode | ElementWithPropsFactory {
-        return withOrWithoutProps(tag, ...propsOrChildren);
+        return withOrWithoutProps(tag, propsOrChildren);
     }
     return elementFactory;
 }
@@ -121,7 +121,7 @@ export function componentFactoryFactory<TProps>(
             : [ElementProps<HtjsNode, TProps>]
     ): ChildNode | ElementWithPropsFactory {
         if (isChildren(propsOrChildren)) {
-            return withoutProps(fn, ...(propsOrChildren as ChildNode[]));
+            return withoutProps(fn, propsOrChildren);
         }
         return withProps(fn, propsOrChildren[0]);
     }
@@ -134,5 +134,4 @@ export function bind(factory: ElementFactory) {
         res._htjs = true;
         return res;
     }) as typeof createElement;
-    createElement._htjs = true;
 }
