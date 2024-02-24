@@ -181,10 +181,8 @@ type IntrinsicElementFactory = {
 const intrinsicElementFactoryProxy = new Proxy(
     {},
     {
-        get(_, prop) {
-            // @ts-expect-error
-            return e(prop);
-        },
+        // @ts-expect-error
+        get: (_, prop) => e(prop),
     }
 );
 

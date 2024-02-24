@@ -1,49 +1,51 @@
 import { JSXInternal } from './preact-types';
 
-type HtjsElement = { _htjs: true };
+type HtjsNode = { _htjs?: true };
 
 type IntrinsicElementTag = keyof JSXInternal.IntrinsicElements;
 type IntrinsicElementProps<TTag extends IntrinsicElementTag> =
     JSXInternal.IntrinsicElements[TTag];
 
-type ElementTag = IntrinsicElementTag | HtjsElement;
+type ElementTag = IntrinsicElementTag | HtjsNode;
 type ElementPropsWithChildren<
-    TTag extends IntrinsicElementTag | HtjsElement,
+    TTag extends IntrinsicElementTag | HtjsNode,
     TProps
-> = TTag extends IntrinsicElementTag ? IntrinsicElementProps<TTag> : TProps;
-type ElementProps<
-    TTag extends IntrinsicElementTag | HtjsElement,
-    TProps
-> = Omit<ElementPropsWithChildren<TTag, TProps>, 'children'>;
+> = (TTag extends IntrinsicElementTag
+    ? IntrinsicElementProps<TTag>
+    : TProps) & { children?: ChildNode[] };
+type ElementProps<TTag extends IntrinsicElementTag | HtjsNode, TProps> = Omit<
+    ElementPropsWithChildren<TTag, TProps>,
+    'children'
+>;
 
 type ChildNode =
-    | HtjsElement
+    | HtjsNode
     | string
     | number
     | boolean
     | null
     | undefined
     | ChildNode[];
-type PropsOrChildren<TTag extends IntrinsicElementTag | HtjsElement, TProps> =
+type PropsOrChildren<TTag extends IntrinsicElementTag | HtjsNode, TProps> =
     | ChildNode[]
     | [ElementProps<TTag, TProps>];
 
 type ElementFactory = typeof createElement;
 
-type ElementWithPropsFactory = (...children: ChildNode[]) => HtjsElement;
+type ElementWithPropsFactory = (...children: ChildNode[]) => ChildNode;
 
 let createElement: (<TTag extends ElementTag, TProps>(
     tag: TTag,
     props: ElementProps<typeof tag, TProps>,
     ...children: ChildNode[]
-) => HtjsElement) &
-    HtjsElement;
+) => HtjsNode) &
+    HtjsNode;
 
 function isChildren(args: any): args is ChildNode[] {
     return (
         args.length !== 1 ||
         typeof args[0] === 'string' ||
-        (args[0] as HtjsElement)?._htjs === true
+        (args[0] as HtjsNode)?._htjs === true
     );
 }
 
@@ -58,7 +60,7 @@ export function withOrWithoutProps<TTag extends ElementTag, TProps>(
 export function withOrWithoutProps<TTag extends ElementTag, TProps>(
     tag: TTag,
     ...propsOrChildren: PropsOrChildren<typeof tag, TProps>
-): HtjsElement | ElementWithPropsFactory {
+): HtjsNode | ElementWithPropsFactory {
     if (isChildren(propsOrChildren)) {
         return withoutProps(tag, ...propsOrChildren);
     }
@@ -76,7 +78,7 @@ function withProps<TTag extends ElementTag, TProps>(
 function withoutProps<TTag extends ElementTag>(
     tag: TTag,
     ...children: ChildNode[]
-): HtjsElement {
+): HtjsNode {
     // @ts-expect-error
     return createElement(tag, null, children);
 }
@@ -92,47 +94,41 @@ export function elementFactoryFactory<TTag extends ElementTag, TProps>(
     ): ReturnType<typeof withoutProps<typeof tag>>;
     function elementFactory(
         ...propsOrChildren: PropsOrChildren<typeof tag, TProps>
-    ): HtjsElement | ElementWithPropsFactory {
-        return withOrWithoutProps(tag, ...(propsOrChildren as any));
+    ): HtjsNode | ElementWithPropsFactory {
+        return withOrWithoutProps(tag, ...propsOrChildren);
     }
     return elementFactory;
 }
 
 export function componentFactoryFactory<TProps>(
-    fn: (props: ElementPropsWithChildren<HtjsElement, TProps>) => HtjsElement
+    fn: ElementTag &
+        ((props: ElementPropsWithChildren<HtjsNode, TProps>) => HtjsNode)
 ) {
     type TPropsNoChildren = Omit<TProps, 'children'>;
     function componentFactory(
-        props: ElementProps<HtjsElement, TProps>
-    ): ReturnType<typeof withProps<HtjsElement, TProps>>;
+        props: ElementProps<HtjsNode, TProps>
+    ): ReturnType<typeof withProps<HtjsNode, TProps>>;
     function componentFactory(
         ...children: Partial<TPropsNoChildren> extends TPropsNoChildren
             ? ChildNode[]
-            : [ElementProps<HtjsElement, TProps>]
+            : [ElementProps<HtjsNode, TProps>]
     ): Partial<TPropsNoChildren> extends TPropsNoChildren
-        ? ReturnType<typeof withoutProps<HtjsElement>>
-        : ReturnType<typeof withProps<HtjsElement, TProps>>;
+        ? ReturnType<typeof withoutProps<HtjsNode>>
+        : ReturnType<typeof withProps<HtjsNode, TProps>>;
     function componentFactory(
         ...propsOrChildren: Partial<TPropsNoChildren> extends TPropsNoChildren
-            ? PropsOrChildren<HtjsElement, TProps>
-            : [ElementProps<HtjsElement, TProps>]
-    ): HtjsElement | ElementWithPropsFactory {
+            ? PropsOrChildren<HtjsNode, TProps>
+            : [ElementProps<HtjsNode, TProps>]
+    ): ChildNode | ElementWithPropsFactory {
         if (isChildren(propsOrChildren)) {
-            return withoutProps(
-                fn({ children: propsOrChildren } as ElementPropsWithChildren<
-                    HtjsElement,
-                    TProps
-                >),
-                ...(propsOrChildren as ChildNode[])
-            );
+            return withoutProps(fn, ...(propsOrChildren as ChildNode[]));
         }
-        return withProps(fn(propsOrChildren as TProps), propsOrChildren);
+        return withProps(fn, propsOrChildren[0]);
     }
     return componentFactory;
 }
 
 export function bind(factory: ElementFactory) {
-    factory._htjs = true;
     createElement = ((tag, props, children) => {
         const res = factory(tag, props, children);
         res._htjs = true;
