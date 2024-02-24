@@ -1,0 +1,21 @@
+<script defer type="module">
+    import { h, render } from 'https://esm.sh/preact';
+    import { useState } from 'https://esm.sh/preact/hooks';
+    import { $, _, bind } from 'https://esm.sh/@barndev/htjs';
+
+    bind(h);
+
+    const Counter = $(({ initialCount = 0 }) => {
+        const [count, setCount] = useState(initialCount);
+        const increment = () => setCount((currentCount) => currentCount + 1);
+        const decrement = () => setCount((currentCount) => currentCount - 1);
+
+        return _.div(
+            _.p(`The count is ${count}`),
+            _.button({ onClick: increment })('Increment'),
+            _.button({ onClick: decrement })('Decrement')
+        );
+    });
+
+    render(Counter({ initialCount: 3 })(), document.body);
+</script>
