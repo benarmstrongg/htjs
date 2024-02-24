@@ -28,6 +28,7 @@
         "access": "public"
     },
     "scripts": {
+        "dev": "nodemon -w src -e .ts -x 'pnpm build && serve --cors dist'",
         "build": "tsup",
         "lint": "tsc",
         "changeset": "changeset",
@@ -37,6 +38,8 @@
     "devDependencies": {
         "@changesets/cli": "^2.27.1",
         "@types/node": "^20.11.19",
+        "nodemon": "^3.1.0",
+        "serve": "^14.2.1",
         "ts-node": "^10.9.2",
         "tsup": "^8.0.2",
         "typescript": "^5.3.3"
