@@ -35,13 +35,13 @@ describe('Component factory', () => {
         );
     });
 
-    it('should throw: Double parentheses, no args', () => {
+    it('should throw: double parentheses, no args', () => {
         // @ts-expect-error
         const fn = () => TestComponent()();
         expect(fn).toThrow();
     });
 
-    it('should throw: Double parentheses, children arg only', () => {
+    it('should throw: double parentheses, children arg only', () => {
         // @ts-expect-error
         const fn = () => TestComponent()(div());
         expect(fn).toThrow();
