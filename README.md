@@ -128,11 +128,11 @@ const Form = $(() = => {
 
 ### `/elems`
 
-The alternate `@barndev/htjs/elems` entrypoint exports elements as individual functions such as `h1`, `select`, and `dialog`. This adds over 5 KB to the bundle size. This entrypoint also reexports the `$` function, and exports its own `bind` function that must be used instead of the root `bind`.
+The alternate `@barndev/htjs/elems` entrypoint exports elements as individual functions such as `h1`, `select`, and `dialog`. This adds over 5 KB to the bundle size. This entrypoint also reexports the `$` function and exports its own `bind` function that must be used instead of the root `bind`.
 
 ```js
-// bind() from /elems must be used
 import { h } from 'https://esm.sh/preact';
+// bind() from /elems must be used
 import { bind, $, select, options } from 'https://esm.sh/@barndev/htjs/elems';
 
 bind(h);
