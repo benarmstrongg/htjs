@@ -1,5 +1,11 @@
 # @barndev/htjs
 
+## 1.0.0
+
+### Major Changes
+
+- 64ff80b: First major release. Improved types, reduced bundle size, added tests.
+
 ## 0.0.9
 
 ### Patch Changes
