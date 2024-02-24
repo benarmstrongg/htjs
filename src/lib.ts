@@ -70,7 +70,7 @@ function withProps<TTag extends ElementTag, TProps>(
     tag: TTag,
     props: ElementProps<typeof tag, TProps>
 ): ElementWithPropsFactory {
-    return (...children: ChildNode[]) => createElement(tag, props, ...children);
+    return (...children: ChildNode[]) => createElement(tag, props, children);
 }
 
 function withoutProps<TTag extends ElementTag>(
