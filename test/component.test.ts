@@ -8,8 +8,8 @@ describe('Component factory', () => {
         bind(testCreateElement);
     });
 
-    function fc<T>(obj: T): T & { tag: any } {
-        return htjs({ ...obj, tag: expect.any(Function) });
+    function fc<T>(obj: T): T & { type: any } {
+        return htjs({ ...obj, type: expect.any(Function) });
     }
 
     const TestComponent = $((_props) => div());
@@ -67,7 +67,7 @@ describe('Component factory', () => {
                 props: { id: 'parent' },
                 children: [
                     htjs({
-                        tag: 'p',
+                        type: 'p',
                         props: { id: 'child' },
                         children: ['Hello world'],
                     }),

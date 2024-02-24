@@ -9,13 +9,13 @@ describe('Element factory factory', () => {
         bind(testCreateElement);
     });
 
-    it('should use property accessed as element tag', () => {
+    it('should use property accessed as element type', () => {
         const realNode = _.h2();
-        expect(realNode).toEqual(expect.objectContaining(htjs({ tag: 'h2' })));
+        expect(realNode).toEqual(expect.objectContaining(htjs({ type: 'h2' })));
         // @ts-expect-error
         const fakeNode = _.test123();
         expect(fakeNode).toEqual(
-            expect.objectContaining(htjs({ tag: 'test123' }))
+            expect.objectContaining(htjs({ type: 'test123' }))
         );
     });
 });
@@ -29,7 +29,7 @@ describe('Element factory', () => {
         const node = div();
         expect(node).toEqual(
             htjs({
-                tag: 'div',
+                type: 'div',
                 props: null,
                 children: [],
             })
@@ -41,7 +41,7 @@ describe('Element factory', () => {
         expect(typeof node).toEqual('function');
         expect(node()).toEqual(
             htjs({
-                tag: 'div',
+                type: 'div',
                 props: { className: 'test' },
                 children: [],
             })
@@ -64,7 +64,7 @@ describe('Element factory', () => {
         const node = div({ hidden: 'hidden' })();
         expect(node).toEqual(
             htjs({
-                tag: 'div',
+                type: 'div',
                 props: { hidden: 'hidden' },
                 children: [],
             })
@@ -78,11 +78,11 @@ describe('Element factory', () => {
         );
         expect(node).toEqual(
             htjs({
-                tag: 'div',
+                type: 'div',
                 props: { id: 'parent' },
                 children: [
                     htjs({
-                        tag: 'p',
+                        type: 'p',
                         props: { id: 'child' },
                         children: ['Hello world'],
                     }),
