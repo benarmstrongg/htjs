@@ -1,5 +1,11 @@
 # @barndev/htjs
 
+## 1.0.1
+
+### Patch Changes
+
+- 121d720: Improve bundle size
+
 ## 1.0.0
 
 ### Major Changes
