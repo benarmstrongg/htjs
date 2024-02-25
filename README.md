@@ -105,12 +105,12 @@ const Form = ({ initialState, onChange }) => _.form(
     _.input({
         value: initialState.name,
         placeholder: 'Name',
-        name onChange
+        onChange
     })(),
     _.input({
         value: initialState.address,
         placeholder: 'Address',
-        name onChange
+        onChange
     })(),
 );
 
