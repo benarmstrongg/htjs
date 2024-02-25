@@ -61,11 +61,9 @@ function withOrWithoutProps<TType extends ElementType, TProps>(
     type: TType,
     propsOrChildren: PropsOrChildren<typeof type, TProps>
 ): HtjsNode | ElementWithPropsFactory {
-    if (isChildren(propsOrChildren)) {
-        return withoutProps(type, propsOrChildren);
-    }
-    const props = propsOrChildren[0] as ElementProps<typeof type, TProps>;
-    return withProps(type, props);
+    return isChildren(propsOrChildren)
+        ? withoutProps(type, propsOrChildren)
+        : withProps(type, propsOrChildren[0]);
 }
 
 const withProps =
@@ -120,10 +118,9 @@ export function componentFactoryFactory<TProps>(
             ? PropsOrChildren<HtjsNode, TProps>
             : [ElementProps<HtjsNode, TProps>]
     ): ChildNode | ElementWithPropsFactory {
-        if (isChildren(propsOrChildren)) {
-            return withoutProps(fn, propsOrChildren);
-        }
-        return withProps(fn, propsOrChildren[0]);
+        return isChildren(propsOrChildren)
+            ? withoutProps(fn, propsOrChildren)
+            : withProps(fn, propsOrChildren[0]);
     }
     return componentFactory;
 }
