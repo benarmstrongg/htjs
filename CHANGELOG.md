@@ -1,5 +1,11 @@
 # @barndev/htjs
 
+## 1.0.2
+
+### Patch Changes
+
+- ae110ce: Fix /elems entrypoint types
+
 ## 1.0.1
 
 ### Patch Changes
