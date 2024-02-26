@@ -8,12 +8,12 @@
         "jsx",
         "preact"
     ],
-    "main": "dist/index.js",
-    "module": "dist/index.mjs",
-    "types": "dist/index.d.ts",
+    "main": "index.js",
+    "module": "index.mjs",
+    "types": "index.d.ts",
     "exports": {
-        ".": "./dist/index.js",
-        "./elems": "./dist/elems.js"
+        ".": "./index.js",
+        "./elems": "./elems.js"
     },
     "author": "ben armstrong",
     "repository": {
@@ -21,7 +21,7 @@
         "url": "https://github.com/benarmstrongg/htjs.git"
     },
     "files": [
-        "./dist/**",
+        "./index*",
         "./elems*"
     ],
     "publishConfig": {
@@ -33,7 +33,7 @@
         "test": "jest",
         "lint": "tsc",
         "changeset": "changeset",
-        "prepublish": "pnpm run build && cp ./dist/elems* ./",
+        "prepublish": "pnpm run build && cp ./dist/* ./",
         "publish": "pnpm run prepublish && changeset publish"
     },
     "devDependencies": {

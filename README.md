@@ -117,12 +117,13 @@ const Form = ({ initialState, onChange }) => _.form(
 // if it needs state, it must be wrapped in $
 // not ok
 const Form = () => {
-    const [state, setState] = React.useState({});
+    const [state, setState] = useState({});
     // ...
 }
 // ok
 const Form = $(() = => {
-    const [state, setState] = React.useState({});
+    const [state, setState] = useState({});
+    // ...
 });
 ```
 
