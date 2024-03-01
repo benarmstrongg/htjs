@@ -1,5 +1,11 @@
 # @barndev/htjs
 
+## 1.0.3
+
+### Patch Changes
+
+- 4a02f0b: Fixed type issues with react integration, added integration tests.
+
 ## 1.0.2
 
 ### Patch Changes
