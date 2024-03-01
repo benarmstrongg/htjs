@@ -1,78 +1,77 @@
-import { beforeAll, describe, expect, it } from '@jest/globals';
-import { testCreateElement, appendHtjsProp as htjs } from './util';
+import { API_SPECS, mockCreateElement } from './util';
 
 import { $, bind, div, p } from '../src/elems';
 
-describe('Component factory', () => {
-    beforeAll(() => {
-        bind(testCreateElement);
-    });
+describe('htjs', () => {
+    describe('Component factory', () => {
+        beforeAll(() => {
+            bind(mockCreateElement);
+        });
 
-    function fc<T>(obj: T): T & { type: any } {
-        return htjs({ ...obj, type: expect.any(Function) });
-    }
+        function fc<T>(obj: T): T & { type: any } {
+            return { ...obj, type: expect.any(Function) };
+        }
 
-    const TestComponent = $((_props) => div());
+        const TestComponent = $((_props: any) => div());
 
-    it('should produce expected tree: single parenthesis, no args', () => {
-        const node = TestComponent();
-        expect(node).toEqual(
-            fc({
-                props: null,
-                children: [],
-            })
-        );
-    });
+        test(API_SPECS.SINGLE_PAREN_NO_ARGS, () => {
+            const node = TestComponent();
+            expect(node).toEqual(
+                fc({
+                    props: null,
+                    children: undefined,
+                })
+            );
+        });
 
-    it('should produce expected factory: single parenthesis, props arg', () => {
-        const node = TestComponent({ className: 'test' });
-        expect(typeof node).toEqual('function');
-        expect(node()).toEqual(
-            fc({
-                props: { className: 'test' },
-                children: [],
-            })
-        );
-    });
+        test(API_SPECS.SINGLE_PAREN_PROPS_ARG, () => {
+            const node = TestComponent({ className: 'test' });
+            expect(typeof node).toEqual('function');
+            expect(node()).toEqual(
+                fc({
+                    props: { className: 'test' },
+                    children: undefined,
+                })
+            );
+        });
 
-    it('should throw: double parentheses, no args', () => {
-        // @ts-expect-error
-        const fn = () => TestComponent()();
-        expect(fn).toThrow();
-    });
+        test(API_SPECS.DOUBLE_PAREN_NO_ARGS, () => {
+            // @ts-expect-error
+            const fn = () => TestComponent()();
+            expect(fn).toThrow();
+        });
 
-    it('should throw: double parentheses, children arg only', () => {
-        // @ts-expect-error
-        const fn = () => TestComponent()(div());
-        expect(fn).toThrow();
-    });
+        test(API_SPECS.DOUBLE_PAREN_CHILDREN_ARG, () => {
+            // @ts-expect-error
+            const fn = () => TestComponent()(div());
+            expect(fn).toThrow();
+        });
 
-    it('should produce expected tree: double parentheses, props arg only', () => {
-        const node = TestComponent({ hidden: 'hidden' })();
-        expect(node).toEqual(
-            fc({
-                props: { hidden: 'hidden' },
-                children: [],
-            })
-        );
-    });
+        test(API_SPECS.DOUBLE_PAREN_PROPS_ARG, () => {
+            const node = TestComponent({ hidden: 'hidden' })();
+            expect(node).toEqual(
+                fc({
+                    props: { hidden: 'hidden' },
+                    children: undefined,
+                })
+            );
+        });
 
-    it('should produce expected tree: double parentheses, props and children args', () => {
-        const node = TestComponent({ id: 'parent' })(
-            //
-            p({ id: 'child' })('Hello world')
-        );
-        expect(node).toEqual(
-            fc({
-                props: { id: 'parent' },
-                children: [
-                    htjs({
+        test(API_SPECS.DOUBLE_PAREN_BOTH_ARGS, () => {
+            const node = TestComponent({ id: 'parent' })(
+                //
+                p({ id: 'child' })('Hello world')
+            );
+            expect(node).toEqual(
+                fc({
+                    props: { id: 'parent' },
+                    children: {
                         type: 'p',
                         props: { id: 'child' },
-                        children: ['Hello world'],
-                    }),
-                ],
-            })
-        );
+                        children: 'Hello world',
+                    },
+                })
+            );
+        });
     });
 });

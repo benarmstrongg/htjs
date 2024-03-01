@@ -1,3 +1,4 @@
+import React from 'react';
 import { JSXInternal } from './preact-types';
 
 type HtjsNode = { _htjs?: true };
@@ -42,11 +43,7 @@ let createElement: (<TType extends ElementType, TProps>(
     HtjsNode;
 
 function isChildren(args: any): args is ChildNode[] {
-    return (
-        args.length != 1 ||
-        typeof args[0] == 'string' ||
-        (args[0] as HtjsNode)?._htjs == true
-    );
+    return args.length != 1 || typeof args[0] == 'string';
 }
 
 function withOrWithoutProps<TType extends ElementType, TProps>(
@@ -72,14 +69,14 @@ const withProps =
         props: ElementProps<typeof type, TProps>
     ): ElementWithPropsFactory =>
     (...children: ChildNode[]) =>
-        createElement(type, props, children);
+        createElement(type, props, ...children);
 
 const withoutProps = <TType extends ElementType>(
     type: TType,
     children: ChildNode[]
 ): HtjsNode =>
     // @ts-expect-error
-    createElement(type, null, children);
+    createElement(type, null, ...children);
 
 export function elementFactoryFactory<TType extends ElementType, TProps>(
     type: TType
@@ -98,9 +95,13 @@ export function elementFactoryFactory<TType extends ElementType, TProps>(
     return elementFactory;
 }
 
+type ComponentType<TProps> = ElementType &
+    (
+        | ((props: ElementPropsWithChildren<HtjsNode, TProps>) => HtjsNode)
+        | React.ExoticComponent<TProps>
+    );
 export function componentFactoryFactory<TProps>(
-    fn: ElementType &
-        ((props: ElementPropsWithChildren<HtjsNode, TProps>) => HtjsNode)
+    component: ComponentType<TProps>
 ) {
     type TPropsNoChildren = Omit<TProps, 'children'>;
     function componentFactory(
@@ -119,16 +120,13 @@ export function componentFactoryFactory<TProps>(
             : [ElementProps<HtjsNode, TProps>]
     ): ChildNode | ElementWithPropsFactory {
         return isChildren(propsOrChildren)
-            ? withoutProps(fn, propsOrChildren)
-            : withProps(fn, propsOrChildren[0]);
+            ? withoutProps(component, propsOrChildren)
+            : withProps(component, propsOrChildren[0]);
     }
     return componentFactory;
 }
 
-export function bind(factory: ElementFactory) {
-    createElement = ((type, props, children) => {
-        const res = factory(type, props, children);
-        res._htjs = true;
-        return res;
-    }) as typeof createElement;
+export function bind(factory: (tag: any, props: any, ...children: any) => any) {
+    createElement = ((type, props, ...children) =>
+        factory(type, props, ...children)) as typeof createElement;
 }

@@ -1,93 +1,84 @@
-import { beforeAll, describe, it, expect } from '@jest/globals';
-import { appendHtjsProp as htjs, testCreateElement } from './util';
+import { API_SPECS, mockCreateElement } from './util';
 
 import { _ } from '../src';
 import { bind, div, p } from '../src/elems';
 
-describe('Element factory factory', () => {
-    beforeAll(() => {
-        bind(testCreateElement);
+describe('htjs', () => {
+    describe('Element factory factory', () => {
+        beforeAll(() => {
+            bind(mockCreateElement);
+        });
+
+        it('should use property accessed as element type', () => {
+            const realNode = _.h2();
+            expect(realNode).toEqual(expect.objectContaining({ type: 'h2' }));
+            // @ts-expect-error
+            const fakeNode = _.test123();
+            expect(fakeNode).toEqual(
+                expect.objectContaining({ type: 'test123' })
+            );
+        });
     });
 
-    it('should use property accessed as element type', () => {
-        const realNode = _.h2();
-        expect(realNode).toEqual(expect.objectContaining(htjs({ type: 'h2' })));
-        // @ts-expect-error
-        const fakeNode = _.test123();
-        expect(fakeNode).toEqual(
-            expect.objectContaining(htjs({ type: 'test123' }))
-        );
-    });
-});
+    describe('Element factory', () => {
+        beforeAll(() => {
+            bind(mockCreateElement);
+        });
 
-describe('Element factory', () => {
-    beforeAll(() => {
-        bind(testCreateElement);
-    });
-
-    it('should produce expected tree: single parenthesis, no args', () => {
-        const node = div();
-        expect(node).toEqual(
-            htjs({
+        test(API_SPECS.SINGLE_PAREN_NO_ARGS, () => {
+            const node = div();
+            expect(node).toEqual({
                 type: 'div',
                 props: null,
-                children: [],
-            })
-        );
-    });
+                children: undefined,
+            });
+        });
 
-    it('should produce expected factory: single parenthesis, props arg', () => {
-        const node = div({ className: 'test' });
-        expect(typeof node).toEqual('function');
-        expect(node()).toEqual(
-            htjs({
+        test(API_SPECS.SINGLE_PAREN_PROPS_ARG, () => {
+            const node = div({ className: 'test' });
+            expect(typeof node).toEqual('function');
+            expect(node()).toEqual({
                 type: 'div',
                 props: { className: 'test' },
-                children: [],
-            })
-        );
-    });
+                children: undefined,
+            });
+        });
 
-    it('should throw: double parentheses, no args', () => {
-        // @ts-expect-error
-        const fn = () => div()();
-        expect(fn).toThrow();
-    });
+        test(API_SPECS.DOUBLE_PAREN_NO_ARGS, () => {
+            // @ts-expect-error
+            const fn = () => div()();
+            expect(fn).toThrow();
+        });
 
-    it('should throw: double parentheses, children arg only', () => {
-        // @ts-expect-error
-        const fn = () => div()(div());
-        expect(fn).toThrow();
-    });
+        test(API_SPECS.DOUBLE_PAREN_CHILDREN_ARG, () => {
+            // @ts-expect-error
+            const fn = () => div()(div());
+            expect(fn).toThrow();
+        });
 
-    it('should produce expected tree: double parentheses, props arg only', () => {
-        const node = div({ hidden: 'hidden' })();
-        expect(node).toEqual(
-            htjs({
+        test(API_SPECS.DOUBLE_PAREN_PROPS_ARG, () => {
+            const node = div({ hidden: true })();
+            expect(node).toEqual({
                 type: 'div',
-                props: { hidden: 'hidden' },
-                children: [],
-            })
-        );
-    });
+                props: { hidden: true },
+                children: undefined,
+            });
+        });
 
-    it('should produce expected tree: double parentheses, props and children args', () => {
-        const node = div({ id: 'parent' })(
-            //
-            p({ id: 'child' })('Hello world')
-        );
-        expect(node).toEqual(
-            htjs({
+        test(API_SPECS.DOUBLE_PAREN_BOTH_ARGS, () => {
+            const node = div({ id: 'parent' })(
+                //
+                p({ id: 'child' })('Hello world')
+            );
+            expect(node).toEqual({
                 type: 'div',
                 props: { id: 'parent' },
-                children: [
-                    htjs({
-                        type: 'p',
-                        props: { id: 'child' },
-                        children: ['Hello world'],
-                    }),
-                ],
-            })
-        );
+                children: {
+                    type: 'p',
+                    props: { id: 'child' },
+                    children: 'Hello world',
+                },
+            });
+        });
     });
 });
