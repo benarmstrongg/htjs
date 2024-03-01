@@ -1,4 +1,12 @@
 import { appendHtjsProp as htjs, testCreateElement } from './util';
+import {
+    SINGLE_PAREN_NO_ARGS,
+    SINGLE_PAREN_PROPS_ARG,
+    DOUBLE_PAREN_NO_ARGS,
+    DOUBLE_PAREN_CHILDREN_ARG,
+    DOUBLE_PAREN_PROPS_ARG,
+    DOUBLE_PAREN_BOTH_ARGS,
+} from './apiTestSpecs';
 
 import { _ } from '../src';
 import { bind, div, p } from '../src/elems';
@@ -24,7 +32,7 @@ describe('Element factory', () => {
         bind(testCreateElement);
     });
 
-    it('should produce expected tree: single parenthesis, no args', () => {
+    test(SINGLE_PAREN_NO_ARGS, () => {
         const node = div();
         expect(node).toEqual(
             htjs({
@@ -35,7 +43,7 @@ describe('Element factory', () => {
         );
     });
 
-    it('should produce expected factory: single parenthesis, props arg', () => {
+    test(SINGLE_PAREN_PROPS_ARG, () => {
         const node = div({ className: 'test' });
         expect(typeof node).toEqual('function');
         expect(node()).toEqual(
@@ -47,19 +55,19 @@ describe('Element factory', () => {
         );
     });
 
-    it('should throw: double parentheses, no args', () => {
+    test(DOUBLE_PAREN_NO_ARGS, () => {
         // @ts-expect-error
         const fn = () => div()();
         expect(fn).toThrow();
     });
 
-    it('should throw: double parentheses, children arg only', () => {
+    test(DOUBLE_PAREN_CHILDREN_ARG, () => {
         // @ts-expect-error
         const fn = () => div()(div());
         expect(fn).toThrow();
     });
 
-    it('should produce expected tree: double parentheses, props arg only', () => {
+    test(DOUBLE_PAREN_PROPS_ARG, () => {
         const node = div({ hidden: 'hidden' })();
         expect(node).toEqual(
             htjs({
@@ -70,7 +78,7 @@ describe('Element factory', () => {
         );
     });
 
-    it('should produce expected tree: double parentheses, props and children args', () => {
+    test(DOUBLE_PAREN_BOTH_ARGS, () => {
         const node = div({ id: 'parent' })(
             //
             p({ id: 'child' })('Hello world')
