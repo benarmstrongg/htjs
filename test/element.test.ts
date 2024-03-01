@@ -1,4 +1,3 @@
-import { beforeAll, describe, it, expect } from '@jest/globals';
 import { appendHtjsProp as htjs, testCreateElement } from './util';
 
 import { _ } from '../src';
