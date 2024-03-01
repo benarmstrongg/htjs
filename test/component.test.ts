@@ -1,85 +1,77 @@
-import { testCreateElement, appendHtjsProp as htjs } from './util';
-import {
-    SINGLE_PAREN_NO_ARGS,
-    SINGLE_PAREN_PROPS_ARG,
-    DOUBLE_PAREN_NO_ARGS,
-    DOUBLE_PAREN_CHILDREN_ARG,
-    DOUBLE_PAREN_PROPS_ARG,
-    DOUBLE_PAREN_BOTH_ARGS,
-} from './apiTestSpecs';
+import { API_SPECS, mockCreateElement } from './util';
 
 import { $, bind, div, p } from '../src/elems';
 
-describe('Component factory', () => {
-    beforeAll(() => {
-        bind(testCreateElement);
-    });
+describe('htjs', () => {
+    describe('Component factory', () => {
+        beforeAll(() => {
+            bind(mockCreateElement);
+        });
 
-    function fc<T>(obj: T): T & { type: any } {
-        return htjs({ ...obj, type: expect.any(Function) });
-    }
+        function fc<T>(obj: T): T & { type: any } {
+            return { ...obj, type: expect.any(Function) };
+        }
 
-    const TestComponent = $((_props) => div());
+        const TestComponent = $((_props: any) => div());
 
-    test(SINGLE_PAREN_NO_ARGS, () => {
-        const node = TestComponent();
-        expect(node).toEqual(
-            fc({
-                props: null,
-                children: [],
-            })
-        );
-    });
+        test(API_SPECS.SINGLE_PAREN_NO_ARGS, () => {
+            const node = TestComponent();
+            expect(node).toEqual(
+                fc({
+                    props: null,
+                    children: undefined,
+                })
+            );
+        });
 
-    test(SINGLE_PAREN_PROPS_ARG, () => {
-        const node = TestComponent({ className: 'test' });
-        expect(typeof node).toEqual('function');
-        expect(node()).toEqual(
-            fc({
-                props: { className: 'test' },
-                children: [],
-            })
-        );
-    });
+        test(API_SPECS.SINGLE_PAREN_PROPS_ARG, () => {
+            const node = TestComponent({ className: 'test' });
+            expect(typeof node).toEqual('function');
+            expect(node()).toEqual(
+                fc({
+                    props: { className: 'test' },
+                    children: undefined,
+                })
+            );
+        });
 
-    test(DOUBLE_PAREN_NO_ARGS, () => {
-        // @ts-expect-error
-        const fn = () => TestComponent()();
-        expect(fn).toThrow();
-    });
+        test(API_SPECS.DOUBLE_PAREN_NO_ARGS, () => {
+            // @ts-expect-error
+            const fn = () => TestComponent()();
+            expect(fn).toThrow();
+        });
 
-    test(DOUBLE_PAREN_CHILDREN_ARG, () => {
-        // @ts-expect-error
-        const fn = () => TestComponent()(div());
-        expect(fn).toThrow();
-    });
+        test(API_SPECS.DOUBLE_PAREN_CHILDREN_ARG, () => {
+            // @ts-expect-error
+            const fn = () => TestComponent()(div());
+            expect(fn).toThrow();
+        });
 
-    test(DOUBLE_PAREN_PROPS_ARG, () => {
-        const node = TestComponent({ hidden: 'hidden' })();
-        expect(node).toEqual(
-            fc({
-                props: { hidden: 'hidden' },
-                children: [],
-            })
-        );
-    });
+        test(API_SPECS.DOUBLE_PAREN_PROPS_ARG, () => {
+            const node = TestComponent({ hidden: 'hidden' })();
+            expect(node).toEqual(
+                fc({
+                    props: { hidden: 'hidden' },
+                    children: undefined,
+                })
+            );
+        });
 
-    test(DOUBLE_PAREN_BOTH_ARGS, () => {
-        const node = TestComponent({ id: 'parent' })(
-            //
-            p({ id: 'child' })('Hello world')
-        );
-        expect(node).toEqual(
-            fc({
-                props: { id: 'parent' },
-                children: [
-                    htjs({
+        test(API_SPECS.DOUBLE_PAREN_BOTH_ARGS, () => {
+            const node = TestComponent({ id: 'parent' })(
+                //
+                p({ id: 'child' })('Hello world')
+            );
+            expect(node).toEqual(
+                fc({
+                    props: { id: 'parent' },
+                    children: {
                         type: 'p',
                         props: { id: 'child' },
-                        children: ['Hello world'],
-                    }),
-                ],
-            })
-        );
+                        children: 'Hello world',
+                    },
+                })
+            );
+        });
     });
 });
