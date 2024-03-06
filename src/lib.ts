@@ -107,7 +107,6 @@ export function componentFactoryFactory<TProps>(
         Partial<PropsWithoutChildren> extends PropsWithoutChildren
             ? false
             : true;
-    // type HasChildren = TProps extends { children?: any } ? true : false;
     type HasOnlyChildren = IsAny<TProps> extends true
         ? false
         : { children: any } extends Required<TProps>
