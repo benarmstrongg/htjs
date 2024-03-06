@@ -1,5 +1,7 @@
 import { API_SPECS, mockCreateElement } from './util';
 
+import React from 'react';
+import ReactDOM from 'react-dom';
 import { $, bind, div, p } from '../src/elems';
 
 describe('htjs', () => {
@@ -73,5 +75,18 @@ describe('htjs', () => {
                 })
             );
         });
+    });
+});
+
+describe('DOM render', () => {
+    test('ReactDOM.render', () => {
+        const App = $((_props: { required?: boolean; val2?: string }) => div());
+        ReactDOM.render(
+            $(React.StrictMode)(
+                //
+                App({ required: false })(div(p('hello world')))
+            ),
+            null
+        );
     });
 });

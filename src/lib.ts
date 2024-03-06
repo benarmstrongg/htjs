@@ -3,21 +3,24 @@ import { JSXInternal } from './preact-types';
 
 type HtjsNode = { _htjs?: true };
 
+type IsAny<T> = 0 extends 1 & T ? true : false;
+
 type IntrinsicElementType = keyof JSXInternal.IntrinsicElements;
 type IntrinsicElementProps<TType extends IntrinsicElementType> =
     JSXInternal.IntrinsicElements[TType];
 
-type ElementType = IntrinsicElementType | HtjsNode;
+type ElementType = IntrinsicElementType | HtjsNode | ComponentType<any>;
 type ElementPropsWithChildren<
-    TType extends IntrinsicElementType | HtjsNode,
+    TType extends ElementType,
     TProps
 > = (TType extends IntrinsicElementType
     ? IntrinsicElementProps<TType>
     : TProps) & { children?: ChildNode[] };
-type ElementProps<TType extends IntrinsicElementType | HtjsNode, TProps> = Omit<
+type ElementProps<TType extends ElementType, TProps> = Omit<
     ElementPropsWithChildren<TType, TProps>,
     'children'
 >;
+type Element = HtjsNode & React.ReactElement;
 
 type ChildNode =
     | HtjsNode
@@ -27,19 +30,17 @@ type ChildNode =
     | null
     | undefined
     | ChildNode[];
-type PropsOrChildren<TType extends IntrinsicElementType | HtjsNode, TProps> =
+type PropsOrChildren<TType extends ElementType, TProps> =
     | ChildNode[]
     | [ElementProps<TType, TProps>];
 
-type ElementFactory = typeof createElement;
-
-type ElementWithPropsFactory = (...children: ChildNode[]) => ChildNode;
+type ElementWithPropsFactory = (...children: ChildNode[]) => Element;
 
 let createElement: (<TType extends ElementType, TProps>(
     type: TType,
     props: ElementProps<typeof type, TProps>,
     ...children: ChildNode[]
-) => HtjsNode) &
+) => Element) &
     HtjsNode;
 
 function isChildren(args: any): args is ChildNode[] {
@@ -74,7 +75,7 @@ const withProps =
 const withoutProps = <TType extends ElementType>(
     type: TType,
     children: ChildNode[]
-): HtjsNode =>
+): Element =>
     // @ts-expect-error
     createElement(type, null, ...children);
 
@@ -95,35 +96,41 @@ export function elementFactoryFactory<TType extends ElementType, TProps>(
     return elementFactory;
 }
 
-type ComponentType<TProps> = ElementType &
-    (
-        | ((props: ElementPropsWithChildren<HtjsNode, TProps>) => HtjsNode)
-        | React.ExoticComponent<TProps>
-    );
+type ComponentType<TProps> =
+    | ((props: ElementPropsWithChildren<HtjsNode, TProps>) => HtjsNode)
+    | React.ExoticComponent<TProps>;
 export function componentFactoryFactory<TProps>(
     component: ComponentType<TProps>
 ) {
-    type TPropsNoChildren = Omit<TProps, 'children'>;
-    function componentFactory(
-        props: ElementProps<HtjsNode, TProps>
-    ): ReturnType<typeof withProps<HtjsNode, TProps>>;
-    function componentFactory(
-        ...children: Partial<TPropsNoChildren> extends TPropsNoChildren
-            ? ChildNode[]
-            : [ElementProps<HtjsNode, TProps>]
-    ): Partial<TPropsNoChildren> extends TPropsNoChildren
-        ? ReturnType<typeof withoutProps<HtjsNode>>
-        : ReturnType<typeof withProps<HtjsNode, TProps>>;
-    function componentFactory(
-        ...propsOrChildren: Partial<TPropsNoChildren> extends TPropsNoChildren
-            ? PropsOrChildren<HtjsNode, TProps>
-            : [ElementProps<HtjsNode, TProps>]
-    ): ChildNode | ElementWithPropsFactory {
-        return isChildren(propsOrChildren)
-            ? withoutProps(component, propsOrChildren)
-            : withProps(component, propsOrChildren[0]);
-    }
-    return componentFactory;
+    type PropsWithoutChildren = Omit<TProps, 'children'>;
+    type HasRequiredProps =
+        Partial<PropsWithoutChildren> extends PropsWithoutChildren
+            ? false
+            : true;
+    // type HasChildren = TProps extends { children?: any } ? true : false;
+    type HasOnlyChildren = IsAny<TProps> extends true
+        ? false
+        : { children: any } extends Required<TProps>
+        ? true
+        : false;
+
+    type ComponentWithoutPropsFactory = {
+        (...children: ChildNode[]): ReturnType<typeof withoutProps<HtjsNode>>;
+    };
+    type ComponentWithPropsFactory = {
+        (props: PropsWithoutChildren): ReturnType<
+            typeof withProps<HtjsNode, PropsWithoutChildren>
+        >;
+    };
+    type ComponentFactory = ComponentWithoutPropsFactory &
+        ComponentWithPropsFactory;
+    type Component = HasOnlyChildren extends true
+        ? ComponentWithoutPropsFactory
+        : HasRequiredProps extends true
+        ? ComponentWithPropsFactory
+        : ComponentFactory;
+
+    return elementFactoryFactory(component) as Component;
 }
 
 export function bind(factory: (tag: any, props: any, ...children: any) => any) {
