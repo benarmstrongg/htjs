@@ -30,6 +30,10 @@ Lightweight, no build, plain JS alternative to JSX
 </script>
 ```
 
+JSX is great, but there are certain scenarios where it feels like more pain than it's worth. For example, many applications aim to be zero-build. This can come in many forms, including vanilla-JS-only applications, applications that opt for JSDoc over Typescript, or applications that only use reactivity for small pieces of web pages in individual `<script>` tags. Zero-build apps cannot use JSX. An additional reason to opt for a JSX-alternative is found in applications that are not bootstrapped with JSX support out of the box. For example, a backend application that just wants to serve some HTML with client side reactivity. Instead of creating an entire build pipeline for 4 JS components and one HTML file, or re-learning how to setup babel for JSX, Typscript, and my-one-project-specific-case every time you need to use it, it may be time to ditch JSX or reach for a JSX alternative. `@barndev/htjs` provides an intuative API for describing UI with natural indentation.
+
+For an alternative JSX alternative, try [htm](https://github.com/developit/htm).
+
 ## Installation
 
 `@barndev/htjs` is available on npm and [esm.sh](https://esm.sh/) CDN.
@@ -86,7 +90,9 @@ If props are provided, `_.<elem>` returns a factory-factory, or a function that 
 The `$` function creates a component given a function. The usage is the same as the `_.<elem>` function, using the with-or-without-props approach.
 
 ```js
-const Card = $({ children } => div({ className: 'p-2' })(children));
+const Card = $({ children } =>
+    div({ className: 'p-2' })(children)
+);
 const Button = $((props) => {
     return button({
         className: 'btn btn-primary'
@@ -97,7 +103,7 @@ const Button = $((props) => {
 Card(Button({ text: 'Click Me', onClick: alert('Clicked!') })());
 ```
 
-While regular JS functions can be used to group elements, it's important to note that these are _not_ components. The element returned by `createElement` will be that of the root element in the return statement, not that of a component. This means things like React/Preact hooks will not work inside these functions.
+The `$` method is required to opt in to the with-or-without-props API, and only objects created with this function will be treated as components. While regular JS functions can be used to group elements, it's important to note that these are _not_ components. The element returned by `createElement` will be that of the root element in the return statement, not that of a component. This means things like React/Preact hooks will not work inside these functions.
 
 ```js
 // ok
@@ -141,4 +147,42 @@ bind(h);
 const MyDropdown = $(({ handleChange }) =>
     select({ onChange: handleChange })(option('None'), option('Some'));
 );
+```
+
+### Integrations
+
+As previously mentioned, `@barndev/htjs` is built to work with React and Preact by default Initial render of virtual DOM nodes is slightly different between these libraries:
+
+#### Preact
+
+```js
+import { h, render } from 'preact';
+import { bind } from '@barndev/htjs';
+import App from './App';
+
+bind(h);
+render(App(), document.body);
+```
+
+#### React
+
+```js
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { $, bind } from '@barndev/htjs';
+import App from './App';
+
+bind(React.createElement);
+ReactDOM.createRoot(document.getElementById('root')).render(
+    $(React.StrictMode)(App())
+);
+```
+
+Additionally, any `createElement` function that adheres to the following signature can be passed to `bind` and used:
+
+```js
+function createElement(type, props, ...children) {
+    // ...
+    return element;
+}
 ```
