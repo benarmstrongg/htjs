@@ -79,7 +79,10 @@ describe('react', () => {
                 ...node,
                 props: {
                     ...node.props,
-                    children: elem(node.props.children),
+                    children:
+                        typeof node.props.children === 'string'
+                            ? node.props.children
+                            : elem(node.props.children),
                 },
             };
         }
@@ -133,12 +136,14 @@ describe('react', () => {
     });
 
     describe('Component factory', () => {
-        xit('React.StrictMode', () => {
+        it('React.StrictMode', () => {
             const node = $(React.StrictMode)(div('hello world'));
-            const reactNode = React.createElement(
-                React.StrictMode,
-                null,
-                React.createElement('div', null, 'hello world')
+            const reactNode = elem(
+                React.createElement(
+                    React.StrictMode,
+                    null,
+                    elem(React.createElement('div', null, 'hello world'))
+                )
             );
             expect(node).toEqual(reactNode);
         });
