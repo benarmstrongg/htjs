@@ -19,7 +19,7 @@ type ElementPropsWithChildren<
 type ElementProps<TType extends ElementType, TProps> = Omit<
     ElementPropsWithChildren<TType, TProps>,
     'children'
->;
+> & { key?: any };
 type HtjsElement = HtjsNode & {
     type: any;
     key: any;
@@ -100,7 +100,7 @@ export function elementFactoryFactory<TType extends ElementType, TProps>(
     function elementFactory(
         ...propsOrChildren: PropsOrChildren<typeof type, TProps>
     ): HtjsNode | ElementWithPropsFactory {
-        return withOrWithoutProps(type, propsOrChildren);
+        return withOrWithoutProps(type, propsOrChildren as any);
     }
     return elementFactory;
 }
@@ -116,25 +116,21 @@ export function componentFactoryFactory<TProps>(
         Partial<PropsWithoutChildren> extends PropsWithoutChildren
             ? false
             : true;
-    type HasOnlyChildren = IsAny<TProps> extends true
-        ? false
-        : { children: any } extends Required<TProps>
-        ? true
-        : false;
 
     type ComponentWithoutPropsFactory = {
         (...children: ChildNode[]): ReturnType<typeof withoutProps<HtjsNode>>;
     };
     type ComponentWithPropsFactory = {
         (props: PropsWithoutChildren): ReturnType<
-            typeof withProps<HtjsNode, PropsWithoutChildren>
+            typeof withProps<
+                HtjsNode,
+                ElementProps<HtjsNode, PropsWithoutChildren>
+            >
         >;
     };
     type ComponentFactory = ComponentWithoutPropsFactory &
         ComponentWithPropsFactory;
-    type Component = HasOnlyChildren extends true
-        ? ComponentWithoutPropsFactory
-        : HasRequiredProps extends true
+    type Component = HasRequiredProps extends true
         ? ComponentWithPropsFactory
         : ComponentFactory;
 
