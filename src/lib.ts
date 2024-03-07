@@ -1,13 +1,12 @@
 import React from 'react';
-import { JSXInternal } from './preact-types';
 
 type HtjsNode = { _htjs?: true };
 
 type IsAny<T> = 0 extends 1 & T ? true : false;
 
-type IntrinsicElementType = keyof JSXInternal.IntrinsicElements;
+type IntrinsicElementType = keyof React.JSX.IntrinsicElements;
 type IntrinsicElementProps<TType extends IntrinsicElementType> =
-    JSXInternal.IntrinsicElements[TType];
+    React.JSX.IntrinsicElements[TType];
 
 type ElementType = IntrinsicElementType | HtjsNode | ComponentType<any>;
 type ElementPropsWithChildren<
@@ -29,7 +28,9 @@ type ChildNode =
     | boolean
     | null
     | undefined
-    | ChildNode[];
+    | ChildNode[]
+    // integrations
+    | React.ReactNode;
 type PropsOrChildren<TType extends ElementType, TProps> =
     | ChildNode[]
     | [ElementProps<TType, TProps>];
