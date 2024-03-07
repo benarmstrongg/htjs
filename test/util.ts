@@ -8,6 +8,10 @@ export const mockCreateElement: Parameters<typeof bind>[0] = (
     return { type, props, children };
 };
 
+export function appendHtjsProp(obj: any) {
+    return { ...obj, _htjs: true };
+}
+
 export const API_SPECS = {
     SINGLE_PAREN_NO_ARGS:
         'should produce expected tree: single parenthesis, no args',
@@ -25,4 +29,4 @@ export const API_SPECS = {
 
     DOUBLE_PAREN_BOTH_ARGS:
         'should produce expected tree: double parentheses, props and children args',
-};
+} as const;
