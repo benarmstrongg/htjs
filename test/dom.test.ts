@@ -7,7 +7,7 @@ const { TextEncoder, TextDecoder } = require('util');
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
 
-// @ts-ignore setup react
+// @ts-ignore setup react env
 global.IS_REACT_ACT_ENVIRONMENT = true;
 
 import PreactTestUtils from 'preact/test-utils';
@@ -17,21 +17,19 @@ import ReactDOM from 'react-dom/client';
 import * as preact from 'preact';
 import { $, _, bind } from '../src';
 
-const PAGE_HTML = `
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Test</title>
-    </head>
-    <body>
-        <div id="root"></div>
-    </body>
-</html>
-`;
-
 describe('DOM Render', () => {
     beforeEach(() => {
-        document.write(PAGE_HTML);
+        document.write(`
+            <!DOCTYPE html>
+            <html>
+                <head>
+                    <title>Test</title>
+                </head>
+                <body>
+                    <div id="root"></div>
+                </body>
+            </html>
+        `);
     });
 
     const App = $((props: { lib: 'preact' | 'react' }) =>
