@@ -1,5 +1,11 @@
 # @barndev/htjs
 
+## 1.0.4
+
+### Patch Changes
+
+- 7aef2c4: Improve component type narrowing, fix integration bugs, improve README
+
 ## 1.0.3
 
 ### Patch Changes
