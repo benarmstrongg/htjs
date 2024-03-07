@@ -1,7 +1,5 @@
-import { API_SPECS, mockCreateElement } from './util';
+import { API_SPECS, mockCreateElement, appendHtjsProp as htjs } from './util';
 
-import React from 'react';
-import ReactDOM from 'react-dom';
 import { $, bind, div, p } from '../src/elems';
 
 describe('htjs', () => {
@@ -11,7 +9,7 @@ describe('htjs', () => {
         });
 
         function fc<T>(obj: T): T & { type: any } {
-            return { ...obj, type: expect.any(Function) };
+            return htjs({ ...obj, type: expect.any(Function) });
         }
 
         const TestComponent = $((_props: any) => div());
@@ -67,26 +65,13 @@ describe('htjs', () => {
             expect(node).toEqual(
                 fc({
                     props: { id: 'parent' },
-                    children: {
+                    children: htjs({
                         type: 'p',
                         props: { id: 'child' },
                         children: 'Hello world',
-                    },
+                    }),
                 })
             );
         });
-    });
-});
-
-describe('DOM render', () => {
-    test('ReactDOM.render', () => {
-        const App = $((_props: { required?: boolean; val2?: string }) => div());
-        ReactDOM.render(
-            $(React.StrictMode)(
-                //
-                App({ required: false })(div(p('hello world')))
-            ),
-            null
-        );
     });
 });

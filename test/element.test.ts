@@ -1,4 +1,4 @@
-import { API_SPECS, mockCreateElement } from './util';
+import { API_SPECS, mockCreateElement, appendHtjsProp as htjs } from './util';
 
 import { _ } from '../src';
 import { bind, div, p } from '../src/elems';
@@ -27,21 +27,25 @@ describe('htjs', () => {
 
         test(API_SPECS.SINGLE_PAREN_NO_ARGS, () => {
             const node = div();
-            expect(node).toEqual({
-                type: 'div',
-                props: null,
-                children: undefined,
-            });
+            expect(node).toEqual(
+                htjs({
+                    type: 'div',
+                    props: null,
+                    children: undefined,
+                })
+            );
         });
 
         test(API_SPECS.SINGLE_PAREN_PROPS_ARG, () => {
             const node = div({ className: 'test' });
             expect(typeof node).toEqual('function');
-            expect(node()).toEqual({
-                type: 'div',
-                props: { className: 'test' },
-                children: undefined,
-            });
+            expect(node()).toEqual(
+                htjs({
+                    type: 'div',
+                    props: { className: 'test' },
+                    children: undefined,
+                })
+            );
         });
 
         test(API_SPECS.DOUBLE_PAREN_NO_ARGS, () => {
@@ -58,11 +62,13 @@ describe('htjs', () => {
 
         test(API_SPECS.DOUBLE_PAREN_PROPS_ARG, () => {
             const node = div({ hidden: true })();
-            expect(node).toEqual({
-                type: 'div',
-                props: { hidden: true },
-                children: undefined,
-            });
+            expect(node).toEqual(
+                htjs({
+                    type: 'div',
+                    props: { hidden: true },
+                    children: undefined,
+                })
+            );
         });
 
         test(API_SPECS.DOUBLE_PAREN_BOTH_ARGS, () => {
@@ -70,15 +76,17 @@ describe('htjs', () => {
                 //
                 p({ id: 'child' })('Hello world')
             );
-            expect(node).toEqual({
-                type: 'div',
-                props: { id: 'parent' },
-                children: {
-                    type: 'p',
-                    props: { id: 'child' },
-                    children: 'Hello world',
-                },
-            });
+            expect(node).toEqual(
+                htjs({
+                    type: 'div',
+                    props: { id: 'parent' },
+                    children: htjs({
+                        type: 'p',
+                        props: { id: 'child' },
+                        children: 'Hello world',
+                    }),
+                })
+            );
         });
     });
 });
