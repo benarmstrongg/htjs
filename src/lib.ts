@@ -45,7 +45,11 @@ let createElement: (<TType extends ElementType, TProps>(
     HtjsNode;
 
 function isChildren(args: any): args is ChildNode[] {
-    return args.length != 1 || typeof args[0] == 'string';
+    return (
+        args.length != 1 ||
+        typeof args[0] == 'string' ||
+        (args[0] as HtjsNode)?._htjs == true
+    );
 }
 
 function withOrWithoutProps<TType extends ElementType, TProps>(
@@ -134,6 +138,8 @@ export function componentFactoryFactory<TProps>(
 }
 
 export function bind(factory: (tag: any, props: any, ...children: any) => any) {
-    createElement = ((type, props, ...children) =>
-        factory(type, props, ...children)) as typeof createElement;
+    createElement = (type, props, ...children) => {
+        const res = factory(type, props, ...children) as typeof createElement;
+        return { ...res, _htjs: true } as any;
+    };
 }
