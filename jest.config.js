@@ -2,4 +2,5 @@
 module.exports = {
     preset: 'ts-jest',
     testEnvironment: 'node',
+    moduleNameMapper: { '^preact(/(.*)|$)': 'preact$1' },
 };
