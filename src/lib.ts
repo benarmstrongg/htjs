@@ -1,12 +1,13 @@
-import React from 'react';
+import type React from 'react';
+import type { JSXInternal } from './preact-types';
 
 type HtjsNode = { _htjs?: true };
 
 type IsAny<T> = 0 extends 1 & T ? true : false;
 
-type IntrinsicElementType = keyof React.JSX.IntrinsicElements;
+type IntrinsicElementType = keyof JSXInternal.IntrinsicElements;
 type IntrinsicElementProps<TType extends IntrinsicElementType> =
-    React.JSX.IntrinsicElements[TType];
+    JSXInternal.IntrinsicElements[TType];
 
 type ElementType = IntrinsicElementType | HtjsNode | ComponentType<any>;
 type ElementPropsWithChildren<
@@ -19,8 +20,12 @@ type ElementProps<TType extends ElementType, TProps> = Omit<
     ElementPropsWithChildren<TType, TProps>,
     'children'
 >;
-type Element = HtjsNode & React.ReactElement;
-
+type HtjsElement = HtjsNode & {
+    type: any;
+    key: any;
+    props: any;
+    children: any;
+};
 type ChildNode =
     | HtjsNode
     | string
@@ -28,20 +33,19 @@ type ChildNode =
     | boolean
     | null
     | undefined
-    | ChildNode[]
-    // integrations
-    | React.ReactNode;
+    | ChildNode[];
+
 type PropsOrChildren<TType extends ElementType, TProps> =
     | ChildNode[]
     | [ElementProps<TType, TProps>];
 
-type ElementWithPropsFactory = (...children: ChildNode[]) => Element;
+type ElementWithPropsFactory = (...children: ChildNode[]) => HtjsElement;
 
 let createElement: (<TType extends ElementType, TProps>(
     type: TType,
     props: ElementProps<typeof type, TProps>,
     ...children: ChildNode[]
-) => Element) &
+) => HtjsElement) &
     HtjsNode;
 
 function isChildren(args: any): args is ChildNode[] {
@@ -80,7 +84,7 @@ const withProps =
 const withoutProps = <TType extends ElementType>(
     type: TType,
     children: ChildNode[]
-): Element =>
+): HtjsElement =>
     // @ts-expect-error
     createElement(type, null, ...children);
 
