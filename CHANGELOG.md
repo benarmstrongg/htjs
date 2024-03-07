@@ -1,5 +1,11 @@
 # @barndev/htjs
 
+## 1.0.6
+
+### Patch Changes
+
+- 665ef4f: Fix typing for key prop
+
 ## 1.0.5
 
 ### Patch Changes
