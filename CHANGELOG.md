@@ -1,5 +1,11 @@
 # @barndev/htjs
 
+## 1.0.5
+
+### Patch Changes
+
+- cd05ad8: Type improvements
+
 ## 1.0.4
 
 ### Patch Changes
